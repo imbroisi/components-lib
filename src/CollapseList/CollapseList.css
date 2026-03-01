@@ -1,7 +1,11 @@
-/* Container raiz (position relative para o dropdown) */
+/* Wrapper que contém o gatilho (children) e o dropdown; ref usado para "clique fora" */
+.CollapseList-wrapper {
+  position: relative;
+}
+
+/* Container do dropdown (position absolute abaixo do wrapper) */
 .CollapseList-root {
   position: absolute;
-  /* background-color: #fff; */
   width: 100%;
 }
 
