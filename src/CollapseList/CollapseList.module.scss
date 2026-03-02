@@ -1,0 +1,70 @@
+/* Container do dropdown (position absolute abaixo do wrapper) */
+.CollapseListRoot {
+  position: relative;
+  width: 100%;
+}
+
+/* Formato do texto do item.label no CollapseList */
+
+.CollapseListLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+}
+
+.CollapseListLabel:focus-visible {
+  outline: none;
+}
+
+/* Dropdown da lista (overlay) */
+.CollapseListDropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Reduce top padding for the first item */
+.CollapseListDropdown .MuiList-root,
+.CollapseListValue .MuiList-root {
+  padding-top: 8px;
+}
+
+/* Item height and interactive states */
+.CollapseListItemButton {
+  min-height: 32px;
+  height: 32px;
+
+  &:hover {
+    background-color: var(
+      --collapse-list-hover-bg,
+      rgba(255, 255, 255, 0.2)
+    );
+  }
+
+  // /* MUI adds .Mui-selected globally; we must mark it as global in CSS modules */
+  // &:global(.Mui-selected) {
+  //   background-color: var(
+  //     --collapse-list-selected-bg,
+  //     rgba(255, 255, 255, 0.5) !important
+  //   );
+  // }
+
+  // &:global(.Mui-selected):hover {
+  //   background-color: var(
+  //     --collapse-list-selected-bg,
+  //     rgba(255, 255, 255, 0.5) !important
+  //   );
+  // }
+
+  // &:focus-visible {
+  //   background-color: var(
+  //     --collapse-list-focus-bg,
+  //     rgba(255, 255, 255, 0.5) !important
+  //   );
+  // }
+}

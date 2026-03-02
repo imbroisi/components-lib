@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import MuiCollapse from '@mui/material/Collapse';
 import { List, ListItemButton, ListItemText } from '@mui/material';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import './CollapseList.scss';
+import styles from './CollapseList.module.scss';
 
 export type CollapseListOrientation = 'vertical' | 'horizontal';
 
@@ -10,8 +10,8 @@ export interface CollapseListProps {
   list: { name: string; label: string | ReactNode }[];
   value: string | null;
   onSelect: (name: string) => void;
-  open: boolean;
-  onClose?: () => void;
+    open: boolean;
+    onClose?: () => void;
   background?: string;
   labelColor?: string;
 }
@@ -96,7 +96,7 @@ export function CollapseList({
 
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        const idx = currentIndex >= 0 ? currentIndex : 0;
+        const idx = Math.max(currentIndex, 0);
         const name = list[idx]?.name;
         if (name) onSelect(name);
         return;
@@ -106,12 +106,14 @@ export function CollapseList({
 
       event.preventDefault();
       const step = event.key === nextKey ? 1 : -1;
-      const nextIndex =
-        currentIndex < 0
-          ? event.key === nextKey
-            ? 0
-            : list.length - 1
-          : (currentIndex + step + list.length) % list.length;
+
+      let nextIndex = currentIndex;
+      if (currentIndex < 0) {
+        nextIndex = event.key === nextKey ? 0 : list.length - 1;
+      } else {
+        nextIndex = (currentIndex + step + list.length) % list.length;
+      }
+
       itemRefsRef.current[nextIndex]?.focus();
     },
     [list.length, list, onSelect],
@@ -127,10 +129,10 @@ export function CollapseList({
   // if (background !== undefined) valueStyle.backgroundColor = background;
 
   return (
-    <div ref={rootRef} className="CollapseList-root">
+    <div ref={rootRef} className={styles.CollapseListRoot}>
       <div
         ref={listRef}
-        className="CollapseList-dropdown CollapseList-value"
+        className={`${styles.CollapseListDropdown} ${styles.CollapseListValue}`}
         style={{ background }}
       >
         <MuiCollapse in={open} orientation="vertical" onEntered={focusSelectedOrFirst}>
@@ -140,18 +142,25 @@ export function CollapseList({
                 <ListItemButton
                   key={item.name}
                   ref={(el) => { itemRefsRef.current[index] = el; }}
-                  className="CollapseList-itemButton"
+                  className={styles.CollapseListItemButton}
                   selected={value === item.name}
                   onClick={() => onSelect(item.name)}
                   disableRipple
+                  // onMouseOver={}
+                  sx={{
+                    backgroundColor: value === item.name ? 'rgba(255, 255, 255, 0.8) !important' : 'transparent !important',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.8) !important',
+                    },
+                  }}  
                 >
                   <ListItemText
                     primary={
-                      <span className="CollapseList-label" style={{ color: labelColor }}>
+                      <span className={styles.CollapseListLabel} style={{ color: labelColor }}>
                         {item.label}
                       </span>
                     }
-                  />
+                  />  
                 </ListItemButton>
               ))
             }
