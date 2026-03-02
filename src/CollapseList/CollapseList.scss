@@ -1,11 +1,6 @@
-/* Wrapper que contém o gatilho (children) e o dropdown; ref usado para "clique fora" */
-.CollapseList-wrapper {
-  position: relative;
-}
-
 /* Container do dropdown (position absolute abaixo do wrapper) */
 .CollapseList-root {
-  position: absolute;
+  position: relative;
   width: 100%;
 }
 
@@ -46,17 +41,17 @@
 }
 
 .CollapseList-dropdown .CollapseList-itemButton:hover {
-  background-color: var(--collapse-list-hover-bg, rgba(0, 0, 0, 0.04));
+  background-color: var(--collapse-list-hover-bg, rgba(255, 255, 255, 0.2));
 }
 
 .CollapseList-dropdown .CollapseList-itemButton.Mui-selected {
-  background-color: var(--collapse-list-selected-bg, rgba(0, 0, 0, 0.08));
+  background-color: var(--collapse-list-selected-bg, rgba(255, 255, 255, 0.2));
 }
 
 .CollapseList-dropdown .CollapseList-itemButton.Mui-selected:hover {
-  background-color: var(--collapse-list-selected-bg, rgba(0, 0, 0, 0.08));
+  background-color: var(--collapse-list-selected-bg, rgba(255, 255, 255, 0.2));
 }
 
 .CollapseList-dropdown .CollapseList-itemButton:focus-visible {
-  background-color: var(--collapse-list-focus-bg, rgba(0, 0, 0, 0.12));
+  background-color: var(--collapse-list-focus-bg, rgba(255, 255, 255, 0.2));
 }

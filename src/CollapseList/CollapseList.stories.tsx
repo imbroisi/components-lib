@@ -4,7 +4,7 @@ import { CollapseList } from './CollapseList';
 import { Button } from '../Button';
 
 const LIST = [
-  { name: 'google', label: <div style={{ color: 'red' }}>Google</div> },
+  { name: 'google', label: <div style={{ color: 'yellow' }}>Google</div> },
   { name: 'mui', label: 'Material-UI' },
   { name: 'react', label: 'React' },
 ];
@@ -30,18 +30,11 @@ const meta: Meta<typeof CollapseList> = {
       control: 'boolean',
       description: 'Set the state of CollapseList open/close.',
     },
-    children: {
-      description: 'Content just above the list. Click outside the wrapper triggers onClose.',
-      control: false,
-    },
     onClose: {
       action: 'onClose',
       description: 'Called when closing (click outside, Escape).',
     },
     background: { control: 'color', description: 'Dropdown background color.' },
-    hoverBackground: { control: 'color', description: 'Item background color on hover.' },
-    selectedBackground: { control: 'color', description: 'Selected item background color.' },
-    focusBackground: { control: 'color', description: 'Focused item background color (keyboard).' },
     labelColor: { control: 'color', description: 'Label text color.' },
   },
 };
@@ -60,39 +53,37 @@ export const Default: Story = {
 
     return (
       <div style={{ backgroundColor: 'white', height: '200px' }}>
+
+        <div
+          style={{
+            width: '100%',
+            backgroundColor: 'orange',
+            color: 'white',
+            display: 'flex',
+            justifyContent: 'space-between',
+            // borderBottom: '1px solid #e0e0e0',
+          }}
+        >
+          <div>12345</div>
+          <div>
+            <Button
+              variant="outlined"
+              onClick={() => setOpen((prev) => !prev)}
+              style={{ border: 0 }}
+            >
+              Click to open
+            </Button>
+          </div>
+        </div>
+
+
         <CollapseList
           value={selectedItem ?? null}
           open={open}
           list={LIST}
           onClose={() => setOpen(false)}
           onSelect={setSelectedItem}
-        >
-
-
-          <div
-            style={{
-              width: '100%',
-              backgroundColor: 'orange',
-              color: 'white',
-              display: 'flex',
-              justifyContent: 'space-between',
-              borderBottom: '1px solid #e0e0e0',
-            }}
-          >
-            <div>12345</div>
-            <div>
-              <Button
-                variant="outlined"
-                onClick={() => setOpen((prev) => !prev)}
-                style={{ border: 0 }}
-              >
-                Click to open
-              </Button>
-            </div>
-          </div>
-
-
-        </CollapseList>
+        />
 
 
         ABCDEFGHIJKLMNOPQRSTUVWXYZ

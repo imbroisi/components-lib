@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from 'react';
 import MuiCollapse from '@mui/material/Collapse';
 import { List, ListItemButton, ListItemText } from '@mui/material';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import './CollapseList.css';
+import './CollapseList.scss';
 
 export type CollapseListOrientation = 'vertical' | 'horizontal';
 
@@ -11,61 +11,52 @@ export interface CollapseListProps {
   value: string | null;
   onSelect: (name: string) => void;
   open: boolean;
-  children: ReactNode;
   onClose?: () => void;
   background?: string;
-  hoverBackground?: string;
-  selectedBackground?: string;
-  focusBackground?: string;
   labelColor?: string;
 }
 
-/**
- * CollapseList based on MUI Collapse.
- * Shows or hides content with animation. Use the `open` prop to control.
- * Use onClose: click outside the wrapper (trigger + list) triggers onClose. The trigger is passed as children.
- * On open, focus goes to the selected item. Arrow keys navigate; Enter selects the focused item.
- * If the background prop is not passed, the dropdown background and width are inherited from the previous sibling in the DOM.
- */
 export function CollapseList({
   list,
   value,
   onSelect,
   open,
-  children,
   onClose,
-  background,
-  hoverBackground,
-  selectedBackground,
-  focusBackground,
-  labelColor,
+  background = 'blue',
+  labelColor = '#ffffff',
 }: CollapseListProps) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const itemRefsRef = useRef<(HTMLElement | null)[]>([]);
-  const [inheritedBackground, setInheritedBackground] = useState<string | null>(null);
-  const [inheritedWidth, setInheritedWidth] = useState<string | null>(null);
 
-  // get inherited background and width from the previous sibling
-  useEffect(() => {
-    const prev = rootRef.current?.previousElementSibling as HTMLElement | null;
-    if (!prev) return;
-    const style = window.getComputedStyle(prev);
-    if (background === undefined) {
-      const bg = style.backgroundColor;
-      setInheritedBackground(bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent' ? bg : null);
-    }
-    const w = style.width;
-    setInheritedWidth(w && w !== 'auto' ? w : null);
-  }, [background, open]);
+  // // get inherited background and width from the previous sibling
+  // useEffect(() => {
+  //   const prev = rootRef.current?.previousElementSibling as HTMLElement | null;
+  //   if (!prev) return;
+  //   const style = window.getComputedStyle(prev);
+  //   if (background === undefined) {
+  //     const bg = style.backgroundColor;
+  //     setInheritedBackground(bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent' ? bg : null);
+  //   }
+  //   const w = style.width;
+  //   setInheritedWidth(w && w !== 'auto' ? w : null);
+  // }, [background, open]);
 
-  // handle mouse down outside the component to close the list (wrapper = trigger + list)
+  // handle mouse down outside the component to close the list
   useEffect(() => {
     if (!open || !onClose) return;
     const handleMouseDown = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (wrapperRef.current?.contains(target)) return;
+      const listEl = rootRef.current;
+      const triggerContainer = listEl?.previousElementSibling as HTMLElement | null;
+
+      // click inside the list -> ignore
+      if (listEl && listEl.contains(target)) return;
+
+      // click inside the trigger container (immediately above the list) -> ignore
+      if (triggerContainer && triggerContainer.contains(target)) return;
+
+      // click anywhere else -> close
       onClose();
     };
     document.addEventListener('mousedown', handleMouseDown);
@@ -131,20 +122,17 @@ export function CollapseList({
   // };
 
   // const itemHeightValue = typeof itemHeight === 'number' ? `${itemHeight}px` : itemHeight;
-  const valueStyle: React.CSSProperties & Record<string, string> = {};
+  // const valueStyle: React.CSSProperties & Record<string, string> = {};
 
-  if (background !== undefined) valueStyle.backgroundColor = background;
-  else if (inheritedBackground) valueStyle.backgroundColor = inheritedBackground;
-  if (inheritedWidth) valueStyle.width = inheritedWidth;
-  if (hoverBackground !== undefined) valueStyle['--collapse-list-hover-bg'] = hoverBackground;
-  if (selectedBackground !== undefined) valueStyle['--collapse-list-selected-bg'] = selectedBackground;
-  if (focusBackground !== undefined) valueStyle['--collapse-list-focus-bg'] = focusBackground;
+  // if (background !== undefined) valueStyle.backgroundColor = background;
 
   return (
-    <div ref={wrapperRef} className="CollapseList-wrapper">
-      {children}
-      <div ref={rootRef} className="CollapseList-root">
-        <div ref={listRef} className="CollapseList-value" style={valueStyle}>
+    <div ref={rootRef} className="CollapseList-root">
+      <div
+        ref={listRef}
+        className="CollapseList-dropdown CollapseList-value"
+        style={{ background }}
+      >
         <MuiCollapse in={open} orientation="vertical" onEntered={focusSelectedOrFirst}>
           <List component="nav" aria-label="main mailbox folders" onKeyDown={handleListKeyDown}>
             {
@@ -157,9 +145,9 @@ export function CollapseList({
                   onClick={() => onSelect(item.name)}
                   disableRipple
                 >
-                    <ListItemText
+                  <ListItemText
                     primary={
-                      <span className="CollapseList-label" style={{ color: labelColor || 'white' }}>
+                      <span className="CollapseList-label" style={{ color: labelColor }}>
                         {item.label}
                       </span>
                     }
@@ -169,7 +157,6 @@ export function CollapseList({
             }
           </List>
         </MuiCollapse>
-        </div>
       </div>
     </div>
   );
